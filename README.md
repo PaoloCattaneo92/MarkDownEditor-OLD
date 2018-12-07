@@ -37,17 +37,18 @@ Console.WriteLine(document.RenderToHtml());   //this renders the HTML document
 ## Features
 With _DocumentMaker_: you can currently create organised documents with:
 
-- A [Document] with layers of [Section]s
-- Formatted text with static [TextFormat] class
-- Text [Paragraph]
-- [Quote]
-- [Horizontal break line]
-- [Lists] (with dots, numbers, letters, roman letters)
-- [Task list]
-- Link (to webpages, to sections of the document and even "mailto" links)
-- [Table]
-- Image
-- Mathematical function (work in progress)
+- A [Document](##Document) with layers of [Sections](##Section)
+- Formatted text with static [TextFormat](##TextFormat) class
+- Text [Paragraph](##Paragraph)
+- [Quote](##Quote)
+- [Horizontal break line](##Horizontal-break-line)
+- [Lists](##Lists) (with dots, numbers, letters, roman letters)
+- [Task list](##TaskList)
+- [Link](##Link) (to webpages, to sections of the document and even "mailto" links)
+- [Table](##Table)
+- [Image](##Image)
+- [Templates](##Template)
+- [Mathematical function](##Mathematical-function) (work in progress)
 
 Also if you need your custom content you can extend `RenderedObject` in your 
 own Object and add it to the document.
@@ -62,6 +63,18 @@ You will add all your data content to this object, that will be rendered in MD o
 ```csharp
  Document document = new Document();    //an empty document
 ```
+
+You can add a cool CSS file with the following syntax. 
+
+If you are passing a FileInfo as parameter you can use the flag `embedded` to 
+push all the CSS inside the HTML document or just link the file reference. 
+If use the string overload all the string will be written in the style section of the HTML final document.
+
+```csharp
+document.SetCss(cssFile, false);   //cssFile is a FileInfo referring an external file
+document.SetCss(cssString);        //cssString is a string containing CSS style
+```
+
 
 In order to use some advances functionalities you must enable those with the following syntax:
 
@@ -387,8 +400,24 @@ var link = new MailToLink("email@address.com", "Contact me");
 ##### Output:
 <a href="mailto:email@address.com">Contact me</a>
 
+[Back to all Features list](##Features)
+
 ## Image
-TODO write me
+An image is very similar to a link, but it will be rendered directly in HTML code, 
+even if you are rendering MarkDown only.
+##### Code:
+```csharp
+var image = new Image(  "https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png", //source of the pic
+                        "Lenna",  //title
+                        "This is Lenna",        //alternative text (if something goes wrong)
+                        100,                    //width resize (px)
+                        100));                   //height resize (px)
+```
+
+##### Output:
+<img src="https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png" alt="This is Lenna" width="100" heigth="100" />
+
+[Back to all Features list](##Features)
 
 ## Table
 One of the best way to organize your data is in table format. This class really helps you to 
@@ -476,6 +505,9 @@ Third|5|6
 
 
 [Back to all Features list](##Features)
+
+## Template
+TODO write me
 
 ## Mathematical Function
 TODO write me

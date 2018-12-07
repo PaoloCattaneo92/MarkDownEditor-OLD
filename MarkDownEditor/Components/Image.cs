@@ -40,7 +40,7 @@ namespace PaoloCattaneo.DocumentMaker
         {
         }
 
-        public Image(string src, string title, string alternativeText, int height) : this(src, title, alternativeText, -1, height)
+        public Image(string src, string title, string alternativeText, int height) : this(src, title, alternativeText, NO_RESIZE_VALUE, height)
         {
         }
 

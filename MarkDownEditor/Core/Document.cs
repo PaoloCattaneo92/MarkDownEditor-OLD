@@ -81,16 +81,26 @@ namespace PaoloCattaneo.DocumentMaker
         /// <param name="cssPath">Absolute path of the CSS file with the wanted style</param>
         /// <param name="embedded">If true, the whole CSS file will be written into the HTML file, if false
         /// it will only contain the absolute path of the CSS file</param>
-        public void SetCss(string cssPath, bool embedded)
+        public void SetCss(FileInfo cssPath, bool embedded)
         {
             if (embedded)
             {
-                cssStyle = string.Format(DocumentMakerConstants.SET_CSS_EMBEDDED, File.ReadAllText(cssPath));
+                cssStyle = string.Format(DocumentMakerConstants.SET_CSS_EMBEDDED, File.ReadAllText(cssPath.FullName));
             }
             else
             {
-                cssStyle = string.Format(DocumentMakerConstants.SET_CSS_NOT_EMBEDDED, cssPath);
+                cssStyle = string.Format(DocumentMakerConstants.SET_CSS_NOT_EMBEDDED, File.ReadAllText(cssPath.FullName));
             }
+        }
+
+        /// <summary>
+        /// Set the CSS of the final HTML file.
+        /// All the string containing the CSS style will be embedded in the final HTML file.
+        /// </summary>
+        /// <param name="cssString">A string containing some cssStyle</param>
+        public void SetCss(string cssString)
+        {
+            cssStyle = string.Format(DocumentMakerConstants.SET_CSS_EMBEDDED, cssString);
         }
 
         public override StringBuilder Render(StringBuilder sb)
