@@ -112,7 +112,7 @@ secMain.AddParagraph("Some text");
 secMain.Add(myTable);
 ```
 
-[Back to all Features list](##Features)
+[Back to all Features list](##features)
 
 ## TextFormat
 This static class contains method used to change
