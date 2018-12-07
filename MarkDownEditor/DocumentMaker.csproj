@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Product>MarkDownEditor</Product>
+    <Description>A simple library that can be used to create MarkDown and/or HTML documents containing your C# shaped data structures. It supports:
+- Headers (titles, sections...)
+- Paragraphs
+- Tables
+- Lists (numbers, characters, roman numbers)
+- Templates (still WIP)
+</Description>
+    <PackageId>MarkDownEditor</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageReleaseNotes>10/10/2018: First release.</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Company>Paolo Cattaneo</Company>
+    <Authors>Paolo Cattaneo</Authors>
+    <RootNamespace>PaoloCattaneo.DocumentMaker</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="template_example.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="template_example.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.15.4" />
+    <PackageReference Include="YamlDotNet" Version="5.2.1" />
+  </ItemGroup>
+
+</Project>

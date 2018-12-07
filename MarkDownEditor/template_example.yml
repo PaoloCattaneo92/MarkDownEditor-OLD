@@ -1,0 +1,18 @@
+﻿BaseText: My name is $_key1_$ and I work as $_key2_$ for $_key3_$
+Results:
+ - IdResult: "Me"
+   TemplateItems:
+    - Key: name
+      Val: Paolo Cattaneo
+    - Key: job
+      Val: Software Engineer
+    - Key: company
+      Val: Thales Alenia Space
+ - IdResult: "Another"
+   TemplateItems:
+    - Key: name
+      Val: Pippo
+    - Key: job
+      Val: English Teacher
+    - Key: company
+      Val: a school
