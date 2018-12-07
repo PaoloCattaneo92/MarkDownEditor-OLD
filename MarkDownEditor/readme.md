@@ -1,7 +1,10 @@
 ﻿# DocumentMaker
-This library is used to create `.md` and `.html` files from `C# `code, a technique very useful
+This library is used to create `.md` and `.html` document files from `C# `code, a technique very useful
 when you
 have some data organized in class objects and you want to create a document report for them.
+
+<b>This project is currently under development. First release on Nuget Marketplace
+will launch on 10/12/2018 (10th December 2018).</b>
 
 Always remember that the visual effect strictly depends on the CSS files that HTML used to render. 
 So your solution might be different from what you see in this guide, unless you use the
