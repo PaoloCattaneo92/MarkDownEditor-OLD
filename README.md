@@ -1,38 +1,118 @@
 ﻿# DocumentMaker
+## What is it
 This library is used to create `.md` and `.html` document files from `C# `code, a technique very useful
 when you
 have some data organized in class objects and you want to create a document report for them.
 
-<b>This project is currently under development. First release on Nuget Marketplace
-will launch on 10/12/2018 (10th December 2018).</b>
+<b><u>This project is currently under development. First release on Nuget Marketplace
+will launch on 10/12/2018 (10th December 2018).</u></b>
 
-Always remember that the visual effect strictly depends on the CSS files that HTML used to render. 
-So your solution might be different from what you see in this guide, unless you use the
-same CSS (that's the official GitHub one)
+>Always remember that the visual effect strictly depends on the CSS files that HTML used to render. 
 
-## MDEditor
-Main class of the MarkDownEditor library. Attach to this all the information about your
-document. 
+## Installation
+TODO release me
 
-If you instantiate it base it won't render some of the constructs. In order
-to add all the functionalities you must enable what you need after you created it.
+### Dependecies
+- [Markdig](https://github.com/lunet-io/markdig) (used to render MarkDown in HTML)
+- [YamlDotNet](https://github.com/aaubry/YamlDotNet) (used to read templates from YAML)
 
-This creates a simple `MDEditor`:
+## Getting started
+Create a `Document` object in your code and append all your sections filled with your content. Check the Complete Example at the end of this README or read further for
+specific [Features].
+
+A quick sample:
 
 ```csharp
-MDEditor editor = new MDEditor();
+var document = new Document();  //create an empty document
+document.SetCss("github-markdown.css", embedded: true); //add some style
+var helloSec = new Section("Hello world!"); //create a section (heading level 1)
+helloSec.AddParagraph("Lorem ipsum and so on"); //add something to the section
+document.AddSection(helloSec);     //add the section to the document
+
+Console.WriteLine(document.Render());   //this renders the MarkDown document
+Console.WriteLine(document.RenderToHtml());   //this renders the HTML document
 ```
 
-This way you can create a `MDEditor` with everything enabled:
+
+## Features
+With _DocumentMaker_: you can currently create organised documents with:
+
+- A [Document] with layers of [Section]s
+- Formatted text with static [TextFormat] class
+- Text [Paragraph]
+- [Quote]
+- [Horizontal break line]
+- [Lists] (with dots, numbers, letters, roman letters)
+- [Task list]
+- Link (to webpages, to sections of the document and even "mailto" links)
+- [Table]
+- Image
+- Mathematical function (work in progress)
+
+Also if you need your custom content you can extend `RenderedObject` in your 
+own Object and add it to the document.
+
+# Document components
+In this section I will show every component of the library and how to use it. 
+Use the list provided in [Features] if you need a specific feature.
+
+## Document
+You will add all your data content to this object, that will be rendered in MD or HTML.
 
 ```csharp
- MDEditor editor = new MDEditor()
+ Document document = new Document();    //an empty document
+```
+
+In order to use some advances functionalities you must enable those with the following syntax:
+
+```csharp
+ Document document = new Document()
                     .EnableExtraEmphasis()
                     .EnableExtraList()
                     .EnableMath()
                     .EnableTable()
                     .EnableTaskList();
 ```
+
+## Section
+A Document is made up of Sections of different heading levels, one nested inside the other. An example
+of a document structure could be:
+
+| Section A (heading level 1)
+
+| - Section A-A (heading level 2)
+
+| - - Section A-A-A (heading level 3)
+
+| - Section A-B (heading level 2)
+
+| - Section A-C (heading level 2)
+
+...
+
+As you can see each Section can contain nested sub-Sections.
+
+### Create a Section
+
+```csharp
+var secMain = new Section("Title of the document");  //default heading level = 1
+var secIntroduction = new Section("Introduction", 2);
+```
+
+### Adding content to a Section
+Using the `Add` method you can add to a Section everything that extends the main class `RenderableObject`, such
+as a component that you can find in this guide or a custom one you implemented.
+
+The content of the section will be rendered in the same order it is added. 
+You can check it in the `Content` property of the Section.
+
+```csharp
+secMain.Add(new DotList() {"A", "B", "C"});
+secMain.AddParagraph("Some text");
+secMain.Add(myTable);
+```
+
+[Back to all Features list](##Features)
 
 ## TextFormat
 This static class contains method used to change
@@ -66,431 +146,340 @@ on substring of the original string. They are:
 - ReplaceMark(string original, string toMark)
 ```
 
-### Example
-Code :
+##### Code :
 
 ```csharp
 string bold = TextFormat.Bold("Hello world");
-string test = "pippo pluto paperino";
-test = TextFormat.ReplaceItalic(test, "pluto");
+string testString = "foo bar baz";
+testString = TextFormat.ReplaceItalic(testString, "bar");
 ```
-Output :
+##### Output :
 
 **Hello world!**
 
-pippo _pluto_ paperino
+foo _bar_ baz
+
+[Back to all Features list](##Features)
 
 
-## IRenderable
-Every component (such as all the `Lists`, the `Section`, `Table` and others) implements
-the interface `IRenderable`, which contains the method `Render` that returns a string.
+## Paragraph
+A `Paragraph` object contains a text string. You can add it to the Document using  `AddParagraph`.
 
-If you need to, you can implement it in your own component and add it to a `Section` object,
-however this may lead to improper rendering. Try to use the components in this library.
-
-## Section
-The core of a document is a Section, with all its nested Sections. This file (readme.md) is
-also a MD document, composed by Sections of different heading levels, one nested inside the other.
-
-### Create a Section
-
+##### Code:
 ```csharp
-//Parameters for the constructor are:
-//"Section" => title of the section
-//2 => heading level
-Section secIntroduction = new Section("Introduction", 2);
-//default heading level = 1
-Section secMain = new Section("Title of the document");  
+document.AddParagraph(TextFormat.Bold("Hello ") + world!);
+FileInfo file = new FileInfo("C:/textFile.txt");
+document.AddParagraph(file);    //all text of this file will be added as a Paragraph
 ```
 
-### Adding content to a Section
+##### Output:
 
+**Hello** world!
+
+This text was inside the file parameter and now it stands as a paragraph in the document.
+
+[Back to all Features list](##Features)
+
+## Quote
+A quote string is added directly to a Document or to a Section using `AddQuote` method.
+
+##### Code:
 ```csharp
-secIntroduction.AddParagraph("Hello world! I am a paragraph!");
-secMain.AddParagraph("Following you will find an introduction");
-secMain.AddSection(secIntroduction); 
-//last instruction puts secIntroduction as nested Section of secMain
+document.AddQuote("This is a quote")
 ```
 
-Using the `Add` method you can add to a Section everything that implements `IRenderable`.
+##### Output:
 
+> This is a quote
+
+[Back to all Features list](##Features)
+
+## Horizontal break line
+An horizontal break line, also called thematic break, is added directly to the Document using `AddHr` method.
+
+##### Code:
 ```csharp
-secIntroduction.Add(new DotList({"first", "second", "third"}));
+document.AddParagraph("First paragraph");
+document.AddHr();
+document.AddParagraph("Second paragraph");
 ```
 
-Check the complete example at the end of the document, where every component will be shown.
+##### Output:
+
+First paragraph
+
+---
+
+Second paragraph
+
+
+[Back to all Features list](##Features)
 
 ## Lists
-You can add list of your document of various size and shapes, all behave in similar ways.
-You can instantiate them with empty list or with a given array of strings. In both
-cases you can add items with `AddItem`.
+With _Document Maker_ you can add differnt types of Lists. They all works the same. 
 
-Code : 
+You can add the items in different ways:
+- Within the constructor
+- Accesing the `Items` property
+- Using `AddItem(string item)`
+- [Auto mapping list] the properties of an object
+
+Read specific examples to see them in action.
+
+
+
+### DotList
+##### Code:
 ```csharp
-DotList dotList = new DotList();  //empty
-string[] data = {"a", "b", "c", "d"}
-EnumerableList eList = new EnumerableList(data)
-dotList.AddItem("e");
-dotList.AddItem("f");
+var dotList = new DotList("A", "B", "C");
 ```
 
-Output : 
+##### Output:
 
-- e
-- f
+- A
+- B
+- C
 
-1. a
-2. b
-3. c
-4. d
-
-### Other Lists
-Check the final example to see in action:
-
-- `RomanList` (requires *EnableExtraList*): a numbered list with roman numbers (I, II, III, IV, V...)
-- `LetterList` (requires *EnableExtraList*): a list with letter, uppercase (A., B., C...) or lowercase (a., b., c...)
-
-### TaskList
-Example of a tasklist:
-
-C# : 
+### LetterList
+##### Code:
 ```csharp
-TaskList taskList = new TaskList({"Not done", "This is not done as well"});
-taskList.AddItem("Not even close");
-taskList.AddItem("This is done!", true);
-taskList.AddItem(new Task("Also this one!", true));
+var letterList = new LetterList();
+letterList.Type = LetterType.LOWERCASE;
+letterList.AddItem("A");
+letterList.AddItem("B");
+letterList.AddItem("C");
+
 ```
-MD: 
-- [ ] Not done
-- [ ] This not done as well
-- [ ] Not even close
-- [X] This one is actually done!
-- [X] Also this one is done! 
+
+##### Output:
+
+a. A
+b. B
+c. C
+
+
+#### Remarks
+If there are more than 26 items in the list the letter will cycle the alphabet (A-B...-Z-A-B...).
+
+### NumberList
+##### Code:
+```csharp
+var numberList = new NumberList();
+string[] itemsSource = new string[]{"A", "B", "C"};
+numberList.Items = itemSource;
+```
+
+##### Output:
+
+1. A
+2. B
+3. C
+
+### RomanList
+##### Code:
+```csharp
+var romanList = new RomanList();
+string[] itemsSource = new string[]{"A", "B", "C"};
+foreach(sring s in itemSource) 
+{
+    romanList.AddItem(s);
+}
+```
+
+##### Output:
+
+I. A
+II. B
+III. C
+
+#### Remarks
+Only values up to 10 (X) are supported at the moment.
+
+### Task List
+This is a list of `Task` Objects.
+
+##### Code:
+```csharp
+var task0 = new Task("A", false);
+var task1 = new Task("B"); //default is not completed
+var task2 = new Task("C", true);
+var taskList = new TaskList(task0, task1, task2);
+```
+
+##### Output:
+
+- [ ] A
+- [ ] B
+- [X] C
+
+### Auto mapping list
+##### Code:
+```csharp
+// Example data classes
+class FullName {
+    public string Name {get;}
+    public string Surname {get;}
+
+    public FulLName(string name, string surname) {
+        Name = name;
+        Surname = surname;
+    }
+
+    public override string ToString()  {
+        return Name + " " + Surname;
+    }
+}
+
+class Person {
+    public FullName Name;
+    public int Age;
+    
+    public Person(string name, string surname, int age) {
+        FullName = new FullName(name, surname);
+        Age = age;
+    }
+}
+
+// Main
+var person = new Person("Peter", "Jackson", 57);
+var dotList = new DotListAutoMap<Person>(person);
+```
+
+##### Output:
+
+- Peter Jackson
+- 57
+
+#### Remarks
+There are AutoMap version of all the types of lists. 
+
+Each property will be rendered with its `ToString()` method, if you have your own types you should
+override those so that you won't end up with simple memory addresses.
+
+[Back to all Features list](##Features)
+
+## Link
+Rendering a link is really easy. A Link can have its shown text equals to or different from the 
+link itself.
+
+##### Code:
+```csharp
+var link = new DocLink( "https://github.com/PaoloCattaneo92/DocumentMaker", 
+                        "DocumentMaker", 
+                        "DocumentMaker github page")
+//First parameter is the main link
+//Second parameter is the text shown
+//Third parameter is the title of the link
+```
+
+##### Output:
+[DocumentMaker](https://github.com/PaoloCattaneo92/DocumentMaker)
+
+### MailToLink
+This specific class is used to render "mailto:" links.
+> This will be rendered directly in HTML even in MarkDown rendering
+
+##### Code:
+```csharp
+var link = new MailToLink("email@address.com", "Contact me");
+```
+
+##### Output:
+<a href="mailto:email@address.com">Contact me</a>
+
+## Image
+TODO write me
 
 ## Table
-Rendering a table is easy. Main steps are:
+One of the best way to organize your data is in table format. This class really helps you to 
+do it in the easiest way.
 
-1. Instantiate a table setting the (fixed) number of rows and columns
-2. (optional) Setting Alignment for the columns (default is LEFT)
-3. Setting the headers for the table
-4. Fill the data with `SetRow`, `SetCol` or `SetCell`
-
-### Example
-
-C# : 
+Let's start with creating an empty table, with a given number of rows and columns.
 
 ```csharp
-Table table = new Table(2, 3);
-table.SetHeaders(new string[] { "A", "B", "C" });
-table.SetRow(0, new string[] { "Normal text", TextFormat.Ital("Italic text"), TextFormat.Code("Code text") });
-table.SetRow(1, new string[] { "Hello world", "B2", "Lorem ipsum dolor sit amet" });
-table.SetAlignement(0, TableAlignment.LEFT);
-table.SetAlignement(1, TableAlignment.CENTER);
-table.SetAlignement(2, TableAlignment.RIGHT);
+int rows = 2;
+int columns = 3;
+var table = new Table(rows, columns);
 ```
 
-MD : 
+> The count for rows and columns are for data alone, excluding the headers
 
-A|B|C
-:---|:---:|---:
-Normal text|_Italic test_|`Code text`
-Hello world|B2|Lorem ipsum dolor sit amet
-
-### Known bug
-Changing the TextFormat (bold, italic...) of the _first_ column might compromise
-the structure of the whole table. Try to avoid it.
-
-
-## Template
-A template is a piece of text which contains substrings that must be filled with
-values. This is useful when you want to inflate your data into a fixed form of string. 
-
-A `Template` object contains `Results`, a List of List of `TemplateItem`, each one being
-a simple key-value pair. You might want to change the `TemplateRenderMode`, from `ALL` to
-`SINGLE`. In this case only the Result of index `RenderIndex` will be rendered.
-
-Check the final example to see how the template works. 
-
-
-## Final example
-The following is the complete Program found in project MarkDownEditorTest, followed by its
-rendered MD and the final effect.
-
-### Code
- ```csharp
- static void Main(string[] args)
-        {
-            //Create the editor. In this example we are going to use
-            //all the possible functionalities, so we must enable all the
-            //components
-            MDEditor editor = new MDEditor()
-                .EnableExtraEmphasis()
-                .EnableExtraList()
-                .EnableMath()
-                .EnableTable()
-                .EnableTaskList();
-
-            //Create a section with header level of 1 with the main title
-            //All the document will be contained into this first section, but you could
-            //create other sections of level 1 as well
-            Section H1_MarkDownEditorTest = new Section("MarkDownEditor Test");
-            //Be sure to add every section you create to its container
-            editor.AddSection(H1_MarkDownEditorTest);
-
-            Section H2_TestParagraph = new Section("Test Paragraph", 2);
-            H2_TestParagraph.AddParagraph("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.");
-            H2_TestParagraph.AddParagraph(TextFormat.ReplaceBold("Another paragraph", "Another"));
-            H2_TestParagraph.AddHr();
-            H2_TestParagraph.AddParagraph("A " + TextFormat.Ital("third") + " paragraph, after the horizontal line");
-            H2_TestParagraph.AddQuote("\"So much goes the cat to the lard that she leaves there her little paw\" - Jim Morrison");
-            H1_MarkDownEditorTest.AddSection(H2_TestParagraph);
-
-            Section H2_TestLists = new Section("Test Lists", 2);
-            Section H3_TestDotList = new Section("Test Dot Lists", 3);
-            H3_TestDotList.Add(new DotList(new string[] { "First element", "Second element", TextFormat.Bold("Third element") }));
-            H2_TestLists.AddSection(H3_TestDotList);
-            Section H3_EnumerableList = new Section("Test Enumerable Lists", 3);
-            H3_EnumerableList.Add(new EnumerableList(new string[] { "First element", TextFormat.Code("Second element"), "Third element" }));
-            H2_TestLists.AddSection(H3_EnumerableList);
-            H1_MarkDownEditorTest.AddSection(H2_TestLists);
-            Section H3_RomanList = new Section("Test Roman Lists", 3);
-            RomanList romanList = new RomanList();
-            for(int i=0;i<10;i++)
-            {
-                romanList.AddItem(" is the roman number for: [" + (i+1) + "]");
-            }
-            H3_RomanList.Add(romanList);
-            H2_TestLists.AddSection(H3_RomanList);
-            Section H3_LetterList = new Section("Test Letter Lists", 3);
-            H3_LetterList.Add(new LetterList( new string[] { "First element", "Second element", TextFormat.Bold("Third element") }));
-            H2_TestLists.AddSection(H3_LetterList);
-
-            Section H2_TestTable = new Section("Test Table", 2);
-            Table table = new Table(2, 3);
-            table.SetHeaders(new string[] { "A", "B", "C" });
-            table.SetRow(0, new string[] { "Normal text", TextFormat.Ital("Italic text"), TextFormat.Code("Code text") });
-            table.SetRow(1, new string[] { "Hello world", "B2", "Lorem ipsum dolor sit amet, consectetuer ecc ecc" });
-            table.SetAlignement(0, TableAlignment.LEFT);
-            table.SetAlignement(1, TableAlignment.CENTER);
-            table.SetAlignement(2, TableAlignment.RIGHT);
-            H2_TestTable.Add(table);
-            H1_MarkDownEditorTest.AddSection(H2_TestTable);
-
-            Template temp = new Template(text);
-            temp.RenderMode = TemplateRenderMode.ALL;
-            temp.AddResult();
-            temp.AddTemplateItem("sith_name", "Darth Plagueis");
-            temp.AddTemplateItem("title", "Wise");
-            temp.AddTemplateItem("group", "Jedi");
-            temp.AddResult();
-            temp.AddTemplateItem("sith_name", "Bob");
-            temp.AddTemplateItem("title", "Boozer");
-            temp.AddTemplateItem("group", "Anonymous A.");
-            H2_TemplateTest.Add(temp);
-
-            Section H2_LinkTest = new Section("Link Test", 2);
-            H1_MarkDownEditorTest.AddSection(H2_LinkTest);
-            H2_LinkTest.AddParagraph("Link example: " + new MDLink("https://www.google.com", "Google").Render());
-            H2_LinkTest.AddParagraph("Link to section: " + new MDLink(H2_TestLists).Render());
-            H2_LinkTest.Add(new MDLink(H2_TestTable, "Link to text table"));
-
-            editor.SetCss("C:/Projects/MarkDownEditor/MarkDownEditorTest/style.css", false);
-
-            string mdText = editor.Render();
-            string htmlText = editor.RenderToHtml();
-            Console.WriteLine(mdText);
-            Console.WriteLine("*******************************");
-            Console.WriteLine(htmlText);
-
-            editor.RenderToHtmlFile("C:/Projects/MarkDownEditor/MarkDownEditorTest/MarkDownEditor_Text.html");
-
-
-
-            Console.ReadLine();
+### TableAlignment
+You can assign an allignement for all the table or for a specific column only.
+```csharp
+table.SetAlignement(TableAlignement.CENTER);    //all columns are centered
+table.SetAlignement(0, TableAlignement.RIGHT);  //first column is right aligned
 ```
 
-### MD text
-```
-<style> @import url(C:/Projects/MarkDownEditor/MarkDownEditorTest/style.css); </
-style>
-# MarkDownEditor Test
+### Headers
+You can set headers with `SetHeaders` method.
 
-## Test Paragraph
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
-eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient
-montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu
-, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringill
-a vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a
-, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer ti
-ncidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend
-tellus.
-
-**Another** paragraph
-
----
-A _third_ paragraph, after the horizontal line
-
->"So much goes the cat to the lard that she leaves there her little paw" - Jim M
-orrison
-
-
-## Test Lists
-
-### Test Dot Lists
-* First element
-* Second element
-* **Third element**
-
-
-
-### Test Enumerable Lists
-1. First element
-2. `Second element`
-3. Third element
-
-
-
-### Test Roman Lists
-I.  is the roman number for: [1]
-III.  is the roman number for: [2]
-V.  is the roman number for: [3]
-VII.  is the roman number for: [4]
-IX.  is the roman number for: [5]
-I.  is the roman number for: [6]
-III.  is the roman number for: [7]
-V.  is the roman number for: [8]
-VII.  is the roman number for: [9]
-IX.  is the roman number for: [10]
-
-
-
-### Test Letter Lists
-A. First element
-B. Second element
-C. **Third element**
-
-
-
-## Test Table
-
-A|B|C
-:---|:---:|---:
-Normal text|_Italic text_|`Code text`
-Hello world|B2|Lorem ipsum dolor sit amet, consectetuer ecc ecc
-
-
-
-
-
-## Template Test
-Template: Do you know the tragedy of **[sith_name]** the [title]? It's a story t
-he [group] don't tell you
-
-Do you know the tragedy of **Darth Plagueis** the Wise? It's a story the Jedi do
-n't tell you
-
-Do you know the tragedy of **Bob** the Boozer? It's a story the Anonymous A. don't tel
-l you
-
-
-## Link Test
-Link example: [Google](https://www.google.com)
-
-Link to section: [Test Lists](#Test-Lists)
-
-[Link to text table](#Test-Table)
+```csharp
+table.SetHeaders("First column", "Second column", "Third column");
 ```
 
+### Table content
+You can set content inside the table with the following methods:
+```csharp 
+- SetRow(int row, params string[] contents)
+- SetRow(int row, params Object[] contents)
+- SetRow(int row, params IRenderable[] contents)
+- SetCol(int col, params string[] contents)
+- SetCol(int col, params Object[] contents)
+- SetCol(int col, params IRenderable[] contents)
+- SetCell(int row, int col, string content)
+- SetCell(int row, int col, Object content)
+- SetCell(int row, int col, IRenderable renderableContent)
+``` 
+The set values are stored inside the property `ContentMarix`.
+
+### No Content Renderable
+If your table has, for some reason, 0 rows, its `NoContentRenderable` object will be rendered instead.
+
+The default "nothing here" value is a paragraph that says _"This table is empty"_ but you can modify it, or
+set it to null (in this case nothing will be rendered if the table has no content).
+
+### Automapping table
+Using this feature you can parse a list of Objects and automatically map their properties and values in a table.
+
+The table generated in this way will have the Property names as headers.
+#### Code
+```csharp 
+//Class definition
+class Rectangle {
+    public string Name {get; set;}
+    public int Width {get; set;}
+    public int Height {get; set;}
+
+    public Rectangle(string name, int width, int height) {
+        Name = name;
+        Width = width;
+        Height = height;
+    }
+}
+
+//Main
+var rec0 = new Rectangle("First", 1, 2);
+var rec1 = new Rectangle("Second", 3, 4);
+var rec2 = new Rectangle("Third", 5, 6);
+
+var table = new TableAutoMap<Rectangle>(rec0, rec1, rec2);  //it is a params so you can use List, arrays...
+table.SetAlignement(TableAlignement.CENTER);
+``` 
+
+#### Output
+Name|Width|Height
+:---:|:---:|:---:
+First|1|2
+Second|3|4
+Third|5|6
 
 
-### MD rendered 
+[Back to all Features list](##Features)
 
-# MarkDownEditor Test
+## Mathematical Function
+TODO write me
 
-## Test Paragraph
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
-eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient
-montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu
-, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringill
-a vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a
-, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer ti
-ncidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend
-tellus.
-
-**Another** paragraph
-
----
-A _third_ paragraph, after the horizontal line
-
->"So much goes the cat to the lard that she leaves there her little paw" - Jim M
-orrison
-
-
-## Test Lists
-
-### Test Dot Lists
-* First element
-* Second element
-* **Third element**
-
-
-
-### Test Enumerable Lists
-1. First element
-2. `Second element`
-3. Third element
-
-
-
-### Test Roman Lists
-I.  is the roman number for: [1]
-III.  is the roman number for: [2]
-V.  is the roman number for: [3]
-VII.  is the roman number for: [4]
-IX.  is the roman number for: [5]
-I.  is the roman number for: [6]
-III.  is the roman number for: [7]
-V.  is the roman number for: [8]
-VII.  is the roman number for: [9]
-IX.  is the roman number for: [10]
-
-
-
-### Test Letter Lists
-A. First element
-B. Second element
-C. **Third element**
-
-
-
-## Test Table
-
-A|B|C
-:---|:---:|---:
-Normal text|_Italic text_|`Code text`
-Hello world|B2|Lorem ipsum dolor sit amet, consectetuer ecc ecc
-
-
-
-
-
-## Template Test
-Template: Do you know the tragedy of **[sith_name]** the [title]? It's a story t
-he [group] don't tell you
-
-Do you know the tragedy of **Darth Plagueis** the Wise? It's a story the Jedi do
-n't tell you
-
-Do you know the tragedy of **Tom** the Big Boozer? It's a story the AA don't tel
-l you
-
-
-## Link Test
-Link example: [Google](https://www.google.com)
-
-Link to section: [Test Lists](#Test-Lists)
-
-[Link to text table](#Test-Table)
 
 
 

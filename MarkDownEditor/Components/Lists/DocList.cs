@@ -8,7 +8,7 @@ namespace PaoloCattaneo.DocumentMaker
     /// Abstract base class of a MD list.
     /// See extensions for detailed descriptions:
     /// - <see cref="DotList"/>
-    /// - <see cref="EnumerableList"/>
+    /// - <see cref="NumberList"/>
     /// - <see cref="RomanList"/> (requires <see cref="Document.EnableExtraList"/>)
     /// - <see cref="LetterList"/> (requires <see cref="Document.EnableExtraList"/>)
     /// - <see cref="TaskList"/> (requires <see cref="Document.EnableTaskList"/>)

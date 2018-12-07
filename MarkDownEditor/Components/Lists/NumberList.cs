@@ -13,12 +13,12 @@ namespace PaoloCattaneo.DocumentMaker
     /// 2. second
     /// 3. third
     /// </example>
-    public class EnumerableList : DocList
+    public class NumberList : DocList
     {
         /// <summary>
         /// Constructor. Initialize an empty list
         /// </summary>
-        public EnumerableList() : base()
+        public NumberList() : base()
         {
         }
         /// <summary>
@@ -26,7 +26,7 @@ namespace PaoloCattaneo.DocumentMaker
         /// the given parameter
         /// </summary>
         /// <param name="items">First items of the list</param>
-        public EnumerableList(params string[] items) : base(items)
+        public NumberList(params string[] items) : base(items)
         {
 
         }

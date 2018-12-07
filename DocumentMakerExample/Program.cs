@@ -123,7 +123,7 @@ namespace PaoloCattaneo.DocumentMakerExample
             //A paragraph with a on-a-fly italic word
             persInfo.AddParagraph("This personal information is automatically mapped in the List reading the properties of the " + TextFormat.Ital("Student") + " class");
             //Creating and auto-populating the Letterlist
-            var autoLetterList = new EnumerableListAutoMap<Student>();
+            var autoLetterList = new NumberListAutoMap<Student>();
             autoLetterList.SetItem(John);
             //autoLetterList.Type = LetterType.LOWERCASE;
             persInfo.Add(autoLetterList);

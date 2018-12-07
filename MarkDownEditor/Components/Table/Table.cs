@@ -14,18 +14,13 @@ namespace PaoloCattaneo.DocumentMaker
         protected static readonly string COL_SEP = "|";
         protected static readonly string ALIGN = ":";
         protected static readonly string LINE = "---";
-        /// <summary>
-        /// This string will be printed if the Table
-        /// does not have content and <see cref="NoContentRenderable"/> is null.
-        /// You can modify it.
-        /// </summary>
-        public string NoContentText { get; set; } = "(Table without content)";
+
         /// <summary>
         /// This <see cref="IRenderable"/> object will be rendered
         /// if the the Table does not have content.
         /// You can modify it.
         /// </summary>
-        public IRenderable NoContentRenderable { get; set; } = null;
+        public IRenderable NoContentRenderable { get; set; } = new Paragraph("This table is empty");
 
         /// <summary>
         /// Matrix of string with all the contents of the cells
@@ -325,8 +320,7 @@ namespace PaoloCattaneo.DocumentMaker
             }
             else
             {
-                string noContent = NoContentRenderable != null ? NoContentRenderable.Render() : NoContentText;
-                sb.Append(noContent);
+                sb.Append(NoContentRenderable?.Render());
             }
             return sb;
         }

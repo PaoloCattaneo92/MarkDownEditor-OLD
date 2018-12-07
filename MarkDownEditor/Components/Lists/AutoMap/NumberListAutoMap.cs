@@ -11,14 +11,14 @@ namespace PaoloCattaneo.DocumentMaker
     /// This class calls the static <see cref="ListAutoMapper{E}.Parse(E)"/> to parse the object.
     /// </summary>
     /// <typeparam name="E">The type of the object that will be parsed in the list</typeparam>
-    public class EnumerableListAutoMap<E> : EnumerableList, IListAutoMap<E>
+    public class NumberListAutoMap<E> : NumberList, IListAutoMap<E>
     {
-        public EnumerableListAutoMap(E item)
+        public NumberListAutoMap(E item)
         {
             SetItem(item);
         }
 
-        public EnumerableListAutoMap()
+        public NumberListAutoMap()
         {
         }
 

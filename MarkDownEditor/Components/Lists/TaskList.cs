@@ -32,6 +32,14 @@ namespace PaoloCattaneo.DocumentMaker
             }
         }
 
+        public TaskList(params Task[] tasks) : this()
+        {
+            foreach(Task t in tasks)
+            {
+                AddItem(t);
+            }
+        }
+
         /// <summary>
         /// Add an item
         /// </summary>
