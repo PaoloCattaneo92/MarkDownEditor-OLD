@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Product>MarkDownEditor</Product>
+    <Product>DocumentMaker</Product>
     <Description>This library is used to create MD and HTML document files from your data objects directly from code, a technique very useful when you have some data organized in class objects and you want to create a document containing them.</Description>
     <PackageId>DocumentMaker</PackageId>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageReleaseNotes>10/12/2018: First release.</PackageReleaseNotes>
     <Version>1.0.0</Version>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
