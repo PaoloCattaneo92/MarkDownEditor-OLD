@@ -3,21 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Product>MarkDownEditor</Product>
-    <Description>A simple library that can be used to create MarkDown and/or HTML documents containing your C# shaped data structures. It supports:
-- Headers (titles, sections...)
-- Paragraphs
-- Tables
-- Lists (numbers, characters, roman numbers)
-- Templates (still WIP)
-</Description>
-    <PackageId>MarkDownEditor</PackageId>
+    <Description>This library is used to create MD and HTML document files from your data objects directly from code, a technique very useful when you have some data organized in class objects and you want to create a document containing them.</Description>
+    <PackageId>DocumentMaker</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageReleaseNotes>10/10/2018: First release.</PackageReleaseNotes>
+    <PackageReleaseNotes>10/12/2018: First release.</PackageReleaseNotes>
     <Version>1.0.0</Version>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Company>Paolo Cattaneo</Company>
     <Authors>Paolo Cattaneo</Authors>
     <RootNamespace>PaoloCattaneo.DocumentMaker</RootNamespace>
+    <PackageLicenseUrl>https://github.com/PaoloCattaneo92/DocumentMaker/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PaoloCattaneo92/DocumentMaker</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PaoloCattaneo92/DocumentMaker</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

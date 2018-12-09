@@ -4,9 +4,6 @@ This library is used to create `.md` and `.html` document files from `C# `code, 
 when you
 have some data organized in class objects and you want to create a document report for them.
 
-<b><u>This project is currently under development. First release on Nuget Marketplace
-will launch on 10/12/2018 (10th December 2018).</u></b>
-
 >Always remember that the visual effect strictly depends on the CSS you attach to the HTML file.
 
 ## Installation
