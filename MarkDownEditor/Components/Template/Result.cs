@@ -47,5 +47,10 @@ namespace PaoloCattaneo.DocumentMaker
         {
             TemplateItems.Add(templateItem);
         }
+
+        public void AddTemplateItem(string key, string val)
+        {
+            AddTemplateItem(new TemplateItem(key, val));
+        }
     }
 }

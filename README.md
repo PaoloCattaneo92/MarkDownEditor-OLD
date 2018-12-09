@@ -7,7 +7,7 @@ have some data organized in class objects and you want to create a document repo
 <b><u>This project is currently under development. First release on Nuget Marketplace
 will launch on 10/12/2018 (10th December 2018).</u></b>
 
->Always remember that the visual effect strictly depends on the CSS files that HTML used to render. 
+>Always remember that the visual effect strictly depends on the CSS you attach to the HTML file.
 
 ## Installation
 TODO release me
@@ -43,7 +43,7 @@ With _DocumentMaker_: you can currently create organised documents with:
 - [Quote](##Quote)
 - [Horizontal break line](##Horizontal-break-line)
 - [Lists](##Lists) (with dots, numbers, letters, roman letters)
-- [Task list](##TaskList)
+- [Task list](##Task-List)
 - [Link](##Link) (to webpages, to sections of the document and even "mailto" links)
 - [Table](##Table)
 - [Image](##Image)
@@ -107,9 +107,10 @@ As you can see each Section can contain nested sub-Sections.
 
 ### Create a Section
 
+
 ```csharp
-var secMain = new Section("Title of the document");  //default heading level = 1
-var secIntroduction = new Section("Introduction", 2);
+var sec1 = new Section("1. First Section"); //default heading level 1
+var sec11 = new Section("1.1 Its first subsection", 2);
 ```
 
 ### Adding content to a Section
@@ -123,6 +124,20 @@ You can check it in the `Content` property of the Section.
 secMain.Add(new DotList() {"A", "B", "C"});
 secMain.AddParagraph("Some text");
 secMain.Add(myTable);
+```
+
+### Adding a sub-Section
+You can add a subsection to a bigger one using the `AddSection` method.
+
+```csharp
+var sec1 = new Section("1. First Section");
+var sec11 = new Section("1.1 Its first subsection", 2);
+var sec12 = new Section("1.2 Its second subsection", 2);
+
+sec1.AddSection(sec11)
+    .AddSection(sec12);
+
+//Add some content to the Sections
 ```
 
 [Back to all Features list](##features)
@@ -507,10 +522,130 @@ Third|5|6
 [Back to all Features list](##Features)
 
 ## Template
-TODO write me
+A Template is a piece of text that may be repeated with only a little bit of 
+values (from data Objects) put inside.
+
+This feature is shown clearly in the example (DocumentMakerExample project), where it used to add
+a description in the Exam Detail section.
+
+A Template is composed by:
+- BaseText
+- Results
+- Keys
+- Values
+
+### Template BaseText
+This property is the base text filled with the _keys_ that will be repleced, in the different 
+_results_ with the proper _value_.
+
+In the example provided the base text is:
+
+``` 
+This course is held by the teacher $_teacher_name_$ $_teacher_last_name_$. Lessons are on $_lesson_day_$ from $_start_hour_$ to $_end_hour_$. You can contact $_teacher_last_name_$ at $_teacher_mail_$.
+``` 
+
+### Template Keys
+The keys are put inside the base text itself at the place where the correspundant
+value need to be placed. They are closed between a starting `$_` and a closing `_$`
+
+> You can modify the starting/closing substrings accesing the properties OpenTemplateSign and CloseTemplateSign respectively
+
+### Results and Values
+A Result of a Template is a set of key/values that can fill the Template.
+
+In the example provided a valid result is the set of TemplateItems:
+
+``` 
+- IdResult: "Csharp development"
+  TemplateItems:
+    - Key: teacher_name
+      Val: Paolo
+    - Key: teacher_last_name
+      Val: Cattaneo
+    - Key: lesson_day
+      Val: Monday
+    - Key: start_hour
+      Val: 08:30
+    - Key: end_hour
+      Val: 12:30
+    - Key: teacher_mail
+      Val: paolo.cattaneo92@gmail.com
+``` 
+
+### Creating a Template from code
+As always you can create a Template and TemplateItems directly from code using the data objects.
+
+```csharp
+var temp = new Template("My name is $_name_$ and I am $_age_$ years old");  //base text
+
+var result = new Result();
+result.AddResult("PaoloID");  //the property IdResult is used to identify a result of the Template
+result.AddTemplateItem("name", "Paolo");
+result.AddTemplateItem("age", 26);
+temp.AddResult(ressult);
+
+temp.ResultSingleID = "PaoloID";    //identifies the result to render
+```
+
+### Creating a Template from YAML
+You can load a full Template (with keys and values) from a YAML file, as it's done in the downloadable
+example.
+
+YAML FILE:
+```
+BaseText: This course is held by the teacher $_teacher_name_$ $_teacher_last_name_$. Lessons are on $_lesson_day_$ from $_start_hour_$ to $_end_hour_$. You can contact $_teacher_last_name_$ at $_teacher_mail_$.
+Results:
+ - IdResult: "Csharp development"
+   TemplateItems:
+    - Key: teacher_name
+      Val: Paolo
+    - Key: teacher_last_name
+      Val: Cattaneo
+    - Key: lesson_day
+      Val: Monday
+    - Key: start_hour
+      Val: 08:30
+    - Key: end_hour
+      Val: 12:30
+    - Key: teacher_mail
+      Val: paolo.cattaneo92@gmail.com
+ - IdResult: "Python  development"
+   TemplateItems:
+    - Key: teacher_name
+      Val: Eleanor
+    - Key: teacher_last_name
+      Val: Kent
+    - Key: lesson_day
+    ....
+```
+CODE:
+```csharp
+var descTemplate = TemplateFromYaml.ReadFromYaml(EXAM_DETAIL_DESC_YAML);
+```
+
+
+### Template Render Mode
+Template can be rendered in 2 main ways, setting the `RenderMode`property:
+1. **SINGLE**: only the Result with the `ResultID` equals to the Template `ResultSingleID` will be rendered
+2. **ALL**: all the Results in the Template will be Rendered, following the order they appear in the list
+
+
+[Back to all Features list](##Features)
 
 ## Mathematical Function
-TODO write me
+This features is provided by the static class `DocMath` with
+its methods `OneLine` and `MultiLine`, but it's still unter development
+and may not work as intended.
+
+[Back to all Features list](##Features)
+
+# Known Bugs
+This list of bugs is currently being investigated and will be fixed as soon as possible.
+
+Of course if you find others you are kindly invited to open an issue here on Github or contact
+me.
+
+1. Changing the TextFormat of the first column of a table may lead to rendering problems. 
 
 
 

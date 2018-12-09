@@ -14,11 +14,6 @@ namespace PaoloCattaneo.DocumentMaker
         /// Header title
         /// </summary>
         public string HeaderTitle { get; set; }
-
-        /// <summary>
-        /// Content, as a list of renderable items
-        /// </summary>
-        public List<IRenderable> Content { get; set; }
         
         /// <summary>
         /// Heading level of the section
@@ -33,11 +28,10 @@ namespace PaoloCattaneo.DocumentMaker
         /// </summary>
         /// <param name="headerTitle"><see cref="HeaderTitle"/></param>
         /// <param name="headingLevel"><see cref="HeadingLevel"/></param>
-        public Section(string headerTitle, int headingLevel)
+        public Section(string headerTitle, int headingLevel) : base()
         {
             HeaderTitle = headerTitle;
             HeadingLevel = headingLevel;
-            Content = new List<IRenderable>();
         }
         /// <summary>
         /// Constructor with default value of <see cref="HeadingLevel"/> to 1.
@@ -45,51 +39,6 @@ namespace PaoloCattaneo.DocumentMaker
         /// <param name="headerTitle"><see cref="HeaderTitle"/></param>
         public Section(string headerTitle) : this(headerTitle, 1)
         {
-        }
-        /// <summary>
-        /// Add a string as paragraph.
-        /// </summary>
-        /// <param name="paragraph">Paragraph to add</param>
-        public void AddParagraph(string paragraph)
-        {
-            Content.Add(new Paragraph(paragraph));
-        }
-        public void AddParagraph()
-        {
-            AddParagraph("");
-        }
-        /// <summary>
-        /// Add all the lines of a text file to a paragraph.
-        /// </summary>
-        /// <param name="file">The file containing the paragraph</param>
-        public void AddParagraph(FileInfo file)
-        {
-            AddParagraph(File.ReadAllText(file.FullName));
-        }
-
-        /// <summary>
-        /// Add a <see cref="IRenderable"/> object to the text
-        /// </summary>
-        /// <param name="renderable">An object that can be rendered</param>
-        public void Add(IRenderable renderable)
-        {
-            Content.Add(renderable);
-        }
-
-        /// <summary>
-        /// Add a quote to the text
-        /// </summary>
-        /// <param name="quoteText">A quote</param>
-        public void AddQuote(string quoteText)
-        {
-            AddParagraph(DocumentMakerConstants.QUOTE + quoteText);
-        }
-        /// <summary>
-        /// Add an horizontal line into the text
-        /// </summary>
-        public void AddHr()
-        {
-            Content.Add(new ThematicBreakHR());
         }
 
         private StringBuilder AppendTitleRender(StringBuilder sb)

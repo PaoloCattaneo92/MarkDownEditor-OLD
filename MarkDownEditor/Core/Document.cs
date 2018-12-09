@@ -105,7 +105,14 @@ namespace PaoloCattaneo.DocumentMaker
 
         public override StringBuilder Render(StringBuilder sb)
         {
-            sb.Append(cssStyle).Append("\n");
+            //Style first
+            sb.Append(cssStyle).Append("\n\n");
+            //Main document content
+            foreach(IRenderable renderable in Content)
+            {
+                sb = renderable.Render(sb);
+            }
+            //Subsections rendering
             foreach (Section section in Sections)
             {
                 sb = section.Render(sb);

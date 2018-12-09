@@ -18,10 +18,30 @@ namespace PaoloCattaneo.DocumentMakerExample
         private static readonly string INTRO_ABOUT_FILE = "about.txt";
         private static readonly string EXAM_DETAIL_DESC_YAML = "desc_template.yml";
 
+        #region Fake Data
         // Fake data objects
         private static Student John;
         private static List<Exam> Exams;
         private static List<ExamDetail> ExamsDetails;
+
+        /// <summary>
+        /// Creating some fake data
+        /// </summary>
+        private static void GetFakeData()
+        {
+            John = new Student();
+            Exams = new List<Exam>() {              new Exam("Csharp development", "25/11/2018", 25),
+                                                    new Exam("Python  development", "30/01/2019", 30),
+                                                    new Exam("Machine Learning", "02/03/2019", 27)};
+            ExamsDetails = new List<ExamDetail>()
+            {
+                new ExamDetail("Basics", "Advanced stuff", "Even more advanced stuff", "Why should I even use this?"),
+                new ExamDetail("Yep, it's basically plain english", "Use Python with Big Data apps", "HowTo: Write a full app in a single line"),
+                new ExamDetail("What?", "My own brain is not that hard to understand", "DIY Skynet")
+            };
+        }
+
+        #endregion
 
         static void Main(string[] args)
         {
@@ -40,30 +60,12 @@ namespace PaoloCattaneo.DocumentMakerExample
             Console.ReadLine();
         }
 
-        /// <summary>
-        /// Creating some fake data
-        /// </summary>
-        private static void GetFakeData()
-        {
-            John = new Student();
-            Exams = new List<Exam>() {              new Exam("Csharp development", "25/11/2018", 25),
-                                                    new Exam("Python  development", "30/01/2019", 30),
-                                                    new Exam("Machine Learning", "02/03/2019", 27)};
-            ExamsDetails = new List<ExamDetail>()
-            {
-                new ExamDetail("Basics", "Advanced stuff", "Even more advanced stuff", "Why should I even use this?"),
-                new ExamDetail("Yep, it's basically plain english", "Use Python with Big Data apps", "HowTo: Write a full app in a single line"),
-                new ExamDetail("What?", "My own brain is not that hard to understand", "DIY Skynet")
-            };
-
-        }
-
         private static Document AssembleDoc()
         {
             //Create an empty Document
             var document = new Document();
             //With some style (I decided to embed the whole CSS but you can also just add a link)
-            document.SetCss("github-markdown.css", embedded: true);
+            document.SetCss(new FileInfo("github-markdown.css"), embedded: true);
 
             //I need some advanced rendering so I must enable it
             document.EnableTable()          //this for table
@@ -71,9 +73,6 @@ namespace PaoloCattaneo.DocumentMakerExample
 
             //I suggest you, to keep your code more organised, to split code where you generate
             //Sections in order to keep it modular and easier to understand
-            //In my example I make different calls for different Sections of heading level 1
-            //but if you need it you could also split subsections call, at your own preference.
-            //Really, only an advice here
             document.AddSection(GetIntroSection())
                     .AddSection(GetUniversitySection());
 
@@ -90,6 +89,7 @@ namespace PaoloCattaneo.DocumentMakerExample
             string par1 = "Welcome to this example of a document rendered using DocumentMaker C# library";
             par1 = TextFormat.ReplaceItalic(par1, "DocumentMaker");
             introSec.AddParagraph(par1);
+            introSec.AddHr();
             //The second paragraph is loaded from a txt file because it is always the same
             //and it is quite long
             introSec.AddParagraph(new FileInfo(INTRO_SECONDPARAGRAPH_FILE));
@@ -154,7 +154,6 @@ namespace PaoloCattaneo.DocumentMakerExample
                 detailSec.Add(chapList);
                 descTemplate.ResultSingleID = Exams[i].Argument;    //choose the correct ID for the Result of the template
                 detailSec.AddParagraph(descTemplate.Render());      //adding the rendered template as parahraph
-                detailSec.AddHr();                                  //horizontal line (just to test it)
                 examDetailsSec.AddSection(detailSec);               //adding the subsection of level 3 to level 2
             }
             return mainSec;

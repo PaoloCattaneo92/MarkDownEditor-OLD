@@ -9,14 +9,9 @@ namespace PaoloCattaneo.DocumentMaker
     /// </summary>
     public class ThematicBreakHR : RenderedObj
     {
-        public string Render()
+        public override StringBuilder Render(StringBuilder sb)
         {
-            return DocumentMakerConstants.HR + "\n";
-        }
-
-        public StringBuilder Render(StringBuilder sb)
-        {
-            return sb.Append(Render());
+            return sb.Append("\n\n").Append(DocumentMakerConstants.HR).Append("\n\n");
         }
     }
 }

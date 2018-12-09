@@ -164,6 +164,7 @@ namespace PaoloCattaneo.DocumentMaker
             else
             {
                 if (Results?.Count == 0 || ResultSingleID == null) return sb;
+                sb.Append("\n");
                 string buff = tempText;
                 foreach (TemplateItem item in
                             Results.First(x => x.IdResult == ResultSingleID).TemplateItems)
