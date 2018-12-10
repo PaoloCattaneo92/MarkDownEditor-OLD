@@ -7,7 +7,16 @@ have some data organized in class objects and you want to create a document repo
 >Always remember that the visual effect strictly depends on the CSS you attach to the HTML file.
 
 ## Installation
-TODO release me
+With Package Manager:
+```
+Install-Package MarkDownEditor -Version 1.0.0 
+```
+With .NET CLI:
+```
+dotnet add package MarkDownEditor --version 1.0.0 
+```
+
+
 
 ### Dependecies
 - [Markdig](https://github.com/lunet-io/markdig) (used to render MarkDown in HTML)
